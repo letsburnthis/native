@@ -4,6 +4,7 @@
       import {afterUpdate, getContext, onMount, setContext} from 'svelte';
 
 
+      export let sites;
       let center = [-74.5, 40];
       let mapComponent;
       let zoom = 10;
@@ -51,6 +52,7 @@
 
           })
           }
+          console.log(sites);
       })
 
 async function publishLocation() {
@@ -91,6 +93,36 @@ async function publishLocation() {
 }
 
 
+</script>
+
+<script context="module">
+
+  let sites;
+
+
+  export const load = async ({ fetch }) => {
+
+    const res = await fetch('/load_sites',{
+      method: 'get'
+    });
+
+		if (res.ok) {
+			const sites = await res.json();
+
+			return {
+				props: { 
+          sites: sites.table
+        }
+			};
+		}
+
+		const { message } = await res.json();
+
+		return {
+			error: new Error(message)
+		};
+	};
+  
 </script>
 
 <h1>Welcome to SvelteKit</h1>
