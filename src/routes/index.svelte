@@ -7,6 +7,7 @@
       let center = [-74.5, 40];
       let mapComponent;
       let zoom = 10;
+      let type = "plant_natives_here";
       $: lng = center[0];
       $: lat = center[1];
 
@@ -52,11 +53,50 @@
           }
       })
 
+async function publishLocation() {
+
+        var formData = new FormData();
+
+        formData.append('lng', lng);
+        formData.append('lat', lat);
+        formData.append('type', type);
+        formData.append('lng_lat', JSON.stringify(center));
+
+
+        console.log(formData);
+
+        const response = await fetch('/publish_location', {
+          method: 'post',
+          body: formData
+        })
+
+        if (response.ok) {
+
+          let response_json = await response.json();
+          console.log(response_json);
+          console.log(response_json[0].id);
+
+          // let redirect = '/' + response_json[0].id;
+          
+          // window.location = redirect;
+        }
+        else {
+          let response_json = await response.json();
+          console.log(response_json);
+          console.log(response_json.status);
+          console.log(response.body);
+          // alert(await response.text())
+        }
+
+}
+
 
 </script>
 
 <h1>Welcome to SvelteKit</h1>
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+
+<button on:click={publishLocation}>Publish location</button>
 
 <div class="section-txt" id="map">
     <div class="map-wrap">
