@@ -263,11 +263,27 @@ function handleMessage(event) {
     >
     <!-- on:click={e => { console.log(e.detail); lng = e.detail.lng; lat = e.detail.lat; if (zoom < 10) { zoom = 17; }} } -->
 
-    <Marker bind:lat bind:lng color="blue" />
+    <Marker bind:lat bind:lng color="skyblue">
+      <!-- <div style="font-size: 18px">
+        📍
+      </div> -->
+    </Marker>
 
     {#if sites}
     {#each sites as site}
-      <Marker lng={site.lng} lat={site.lat} label={site.type} color="blue" />
+      <Marker lng={site.lng} lat={site.lat} label={site.type} color="blue">
+        <div style="font-size: 18px;">
+          {#if site.type == "plant_here"}
+          ❗
+          <!-- 🌿👋 -->
+          {:else if site.type == "seed_share"}
+          🌱
+          <!-- 🌱🌿 -->
+          {:else if site.type == "helper"}
+          🖖
+          {/if}
+        </div>
+      </Marker>
     {/each}
     {/if}
   </Map>
@@ -331,4 +347,26 @@ function handleMessage(event) {
     left: 50%;
     transform: translate(-50%, 50%);
   }
+
+  .myMarker {
+  background-color: currentColor;
+  background-size: cover;
+  box-sizing: border-box;
+  width: 50px;
+  height: 50px;
+  /* border-radius: 50%; */
+  cursor: pointer;
+  /* transition: all .2s; */
+  /* border: 12px solid currentColor; */
+  /* opacity:.8; */
+  z-index: 994;
+  /* box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px; */
+}
+.myMarker:hover, .myMarker.active {
+  width: 100px;
+  height: 100px;
+  border-width: 0px;
+  opacity:1;
+  z-index: 995;
+}
 </style>
