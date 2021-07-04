@@ -272,7 +272,7 @@ function handleMessage(event) {
     {#if sites}
     {#each sites as site}
       <Marker lng={site.lng} lat={site.lat} label={site.type} type={site.type} content={site.content} color="blue">
-        <div style="font-size: 18px;">
+        <div style="font-size: 26px;">
           {#if site.type == "plant_here"}
           ❗
           <!-- 🌿👋 -->
