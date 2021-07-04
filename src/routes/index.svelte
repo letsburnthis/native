@@ -9,6 +9,7 @@
       let mapComponent;
       let zoom = 3;
       let type = "plant_natives_here";
+      let natives_list = "Species: \r\n \r\n - White clover (Trifolium repens) \r\n - Yarrow (Achillea millefolium ) \r\n - Nettle (Urtica dioica)";
       $: lng = center[0];
       $: lat = center[1];
       $: style = 'mapbox://styles/mapbox/satellite-v9'
@@ -107,42 +108,42 @@
           //   });
       })
 
-async function publishLocation() {
+// async function publishLocation() {
 
-        var formData = new FormData();
+//         var formData = new FormData();
 
-        formData.append('lng', lng);
-        formData.append('lat', lat);
-        formData.append('type', type);
-        formData.append('lng_lat', JSON.stringify(center));
+//         formData.append('lng', lng);
+//         formData.append('lat', lat);
+//         formData.append('type', type);
+//         formData.append('lng_lat', JSON.stringify(center));
 
 
-        console.log(formData);
+//         console.log(formData);
 
-        const response = await fetch('/publish_location', {
-          method: 'post',
-          body: formData
-        })
+//         const response = await fetch('/publish_location', {
+//           method: 'post',
+//           body: formData
+//         })
 
-        if (response.ok) {
+//         if (response.ok) {
 
-          let response_json = await response.json();
-          console.log(response_json);
-          console.log(response_json[0].id);
+//           let response_json = await response.json();
+//           console.log(response_json);
+//           console.log(response_json[0].id);
 
-          // let redirect = '/' + response_json[0].id;
+//           // let redirect = '/' + response_json[0].id;
           
-          // window.location = redirect;
-        }
-        else {
-          let response_json = await response.json();
-          console.log(response_json);
-          console.log(response_json.status);
-          console.log(response.body);
-          // alert(await response.text())
-        }
+//           // window.location = redirect;
+//         }
+//         else {
+//           let response_json = await response.json();
+//           console.log(response_json);
+//           console.log(response_json.status);
+//           console.log(response.body);
+//           // alert(await response.text())
+//         }
 
-}
+// }
 
 function handleMapClick(e) {
 
@@ -161,19 +162,34 @@ function handleMapClick(e) {
 
 async function publishSite(e) {
 
+  let title;
+
 var formData = new FormData(e.target);
 
 if (menu_display == "share_seeds_plants") {
-  type = "Seeds and plants here"
+  title = "Seeds and plants here"
 }
 
 else if (menu_display == "help") {
-  type = "Willing to help others"
+  title = "Willing to help others"
+}
+
+else if (menu_display == "plant_learn") {
+  title = "Learning to plant"
+}
+
+else if (menu_display == "plant_with_peers") {
+  title = "Planting with peers"
+}
+
+else if (menu_display == "plant_here") {
+  title = "Plant here!"
 }
 
 formData.append('lng', lng);
 formData.append('lat', lat);
-formData.append('type', type);
+formData.append('type', menu_display);
+formData.append('title', title);
 formData.append('lng_lat', JSON.stringify(center));
 
 
@@ -248,7 +264,7 @@ function handleMessage(event) {
 <h1>Welcome to SvelteKit</h1>
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 
-<button on:click={publishLocation}>Publish location</button>
+<!-- <button on:click={publishLocation}>Publish location</button> -->
 
 <div class="section-txt" id="map">
     <div class="map-wrap">
@@ -271,15 +287,19 @@ function handleMessage(event) {
 
     {#if sites}
     {#each sites as site}
-      <Marker lng={site.lng} lat={site.lat} label={site.type} type={site.type} content={site.content} color="blue">
+      <Marker lng={site.lng} lat={site.lat} label={site.title} type={site.title} content={site.content} color="blue">
         <div style="font-size: 26px;">
           {#if site.type == "plant_here"}
           ❗
+          {:else if site.type == "plant_with_peers"}
+          🤝🏼
+          {:else if site.type == "plant_learn"}
+          🍎
           <!-- 🌿👋 -->
           {:else if site.type == "seed_share"}
           🌱
           <!-- 🌱🌿 -->
-          {:else if site.type == "helper"}
+          {:else if site.type == "peer"}
           🖖
           {/if}
         </div>
@@ -290,10 +310,31 @@ function handleMessage(event) {
 
 
   <div class="interaction" style="position: absolute; bottom: 15%">
-    {#if menu_display == "plant"}
-    <button style="display: block;">Learn myself</button>
-    <button style="display: block;">Plant with a peer</button>
-    <button style="display: block;">Someone, plant here!</button>
+    {#if menu_display.substr(0,5) == "plant"}
+    <button style="display: block;" on:click={function() {menu_display = "plant_learn"}}>Learn to plant</button>
+    {#if menu_display == "plant_learn"}
+    <form style="background: white;" on:submit|preventDefault={publishSite}>
+      <label for="content">Below is a list of local natives.  Add any other information you wish to share with others.</label>
+      <textarea name="content" bind:value={natives_list}></textarea>
+      <button>Submit</button>
+    </form>
+    {/if}
+    <button style="display: block;" on:click={function() {menu_display = "plant_with_peers"}}>Plant with a peer</button>
+    {#if menu_display == "plant_with_peer"}
+    <form style="background: white;" on:submit|preventDefault={publishSite}>
+      <label for="content">Below is a list of local natives.  Add any other information you wish to share with others.</label>
+      <textarea name="content" bind:value={natives_list}></textarea>
+      <button>Submit</button>
+    </form>
+    {/if}
+    <button style="display: block;" on:click={function() {menu_display = "plant_here"}}>Someone, plant here!</button>
+    {#if menu_display == "plant_here"}
+    <form style="background: white;" on:submit|preventDefault={publishSite}>
+      <label for="content">Below is a list of local natives.  Add any other information you wish to share with others.</label>
+      <textarea name="content" bind:value={natives_list}></textarea>
+      <button>Submit</button>
+    </form>
+    {/if}
     <hr>
     <button style="display: block;" on:click={function() {menu_display = "offers"}}>Have something to offer?</button>
     {:else}
@@ -305,9 +346,9 @@ function handleMessage(event) {
       <button>Submit</button>
     </form>
     {/if}
-    <button style="display: block;" on:click={function() {menu_display = "help"}}>I'm a planter, willing to help others.</button>
-    {#if menu_display == "help"}
-    <form on:submit|preventDefault={publishSite}>
+    <button style="display: block;" on:click={function() {menu_display = "peer"}}>I'm a planter, willing to help others.</button>
+    {#if menu_display == "peer"}
+    <form style="background: white;" on:submit|preventDefault={publishSite}>
       <label for="content">Anything you want to add or others should know?</label>
       <textarea name="content"></textarea>
       <button>Submit</button>
