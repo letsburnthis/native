@@ -109,7 +109,7 @@ if (menu_display == "seed_share") {
   notification_text = "You have plant sites and local gardeners nearby.  Check the map to connect."
 }
 
-else if (menu_display == "help") {
+else if (menu_display == "peer") {
   title = "Willing to help others"
   notification_text = "You have seed shares and plant sites nearby.  Check the map to connect.";
 }
@@ -325,7 +325,7 @@ function handleMessage(event) {
 
   <div class="interaction" style="position: absolute; bottom: 15%">
     {#if menu_display.substr(0,5) == "plant"}
-    <button style="display: block;" on:click={function() {menu_display = "plant_learn"}}>Learn to plant</button>
+    <button style="display: block;" on:click={function() {if (menu_display == "plant_learn") { menu_display = "plant"} else { menu_display = "plant_learn"} }}>Learn to plant</button>
     {#if menu_display == "plant_learn"}
     <form style="background: white;" on:submit|preventDefault={publishSite}>
       <label for="content">Below is a list of local natives.  Add any other information you wish to share with others.</label>
@@ -333,15 +333,15 @@ function handleMessage(event) {
       <button>Submit</button>
     </form>
     {/if}
-    <button style="display: block;" on:click={function() {menu_display = "plant_with_peers"}}>Plant with peers</button>
-    {#if menu_display == "plant_with_peer"}
+    <button style="display: block;" on:click={function() {if (menu_display == "plant_with_peers") { menu_display = "plant"} else { menu_display = "plant_with_peers"} }}>Plant with peers</button>
+    {#if menu_display == "plant_with_peers"}
     <form style="background: white;" on:submit|preventDefault={publishSite}>
       <label for="content">Below is a list of local natives.  Add any other information you wish to share with others.</label>
       <textarea name="content" bind:value={natives_list}></textarea>
       <button>Submit</button>
     </form>
     {/if}
-    <button style="display: block;" on:click={function() {menu_display = "plant_here"}}>Someone, plant here!</button>
+    <button style="display: block;" on:click={function() {if (menu_display == "plant_here") { menu_display = "plant"} else {menu_display = "plant_here"} }}>Someone, plant here!</button>
     {#if menu_display == "plant_here"}
     <form style="background: white;" on:submit|preventDefault={publishSite}>
       <label for="content">Below is a list of local natives.  Add any other information you wish to share with others.</label>
@@ -352,7 +352,7 @@ function handleMessage(event) {
     <hr>
     <button style="display: block;" on:click={function() {menu_display = "offers"}}>Have something to offer?</button>
     {:else}
-    <button style="display: block;" on:click={function() {menu_display = "seed_share"}}>Seeds + plants to share.</button>
+    <button style="display: block;" on:click={function() {if (menu_display == "seed_share") { menu_display = "offers"} else {menu_display = "seed_share"} }}>Seeds + plants to share.</button>
     {#if menu_display == "seed_share"}
     <form style="background: white;" on:submit|preventDefault={publishSite}>
       <label for="content">List the seeds and plants you're willing to share, and anything else you'd like others to know.</label>
@@ -360,7 +360,7 @@ function handleMessage(event) {
       <button>Submit</button>
     </form>
     {/if}
-    <button style="display: block;" on:click={function() {menu_display = "peer"}}>I'm a planter, willing to help others.</button>
+    <button style="display: block;" on:click={function() {if (menu_display == "peer") { menu_display = "offers"} else { menu_display = "peer"} }}>I'm a planter, willing to help others.</button>
     {#if menu_display == "peer"}
     <form style="background: white;" on:submit|preventDefault={publishSite}>
       <label for="content">Anything you want to add or others should know?</label>
