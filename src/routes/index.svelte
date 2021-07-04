@@ -2,6 +2,7 @@
       import { Map, Geocoder, Marker, controls } from '@beyonk/svelte-mapbox';
       const { GeolocateControl, NavigationControl, ScaleControl } = controls;
       import {afterUpdate, getContext, onMount, setContext} from 'svelte';
+      import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 
 
       export let sites;
@@ -22,6 +23,8 @@
 
 
       let projectsArrayGeojson = [];
+
+      let local_species_loaded = false;
 
 
       onMount(async() => {
@@ -67,87 +70,14 @@
           })
           }
           console.log(sites);
-          
-          // for (var i=0; i < sites.length; i++) {
 
-          // let new_feature =   {
-          //                       "type": "Feature",
-          //                     "geometry": {
-          //                       "type": "Point",
-          //                       "coordinates": [
-          //                         sites[i].lng,
-          //                         sites[i].lat
-          //                       ]
-          //                     }
-          //                   }
-
-          // projectsArrayGeojson.push(new_feature);
-
-          // }
-          
-          // mapComponent.addSource('projects', {
-          //   'type': 'geojson',
-          //   'data': projectsArrayGeojson
-          //   });
-
-          // mapComponent.addLayer({
-          //   id: 'projectsLayer',
-          //   type: 'circle',
-          //   source: 'projects',
-          //   layout: {
-          //       // make layer visible by default
-          //       visibility: "visible",
-          //       },
-          //   paint: {
-          //   "circle-color": "blue",
-          //   "circle-radius": 30
-          //   // 'circle-radius':{
-          //   //         'base': 5,
-          //   //         'stops': [
-          //   //         [12, 2],
-          //   //         [22, 180]
-          //   //         ]
-          //   //       }          
-          //     }
-          //   });
+          setTimeout(function() {
+            if (zoom > 10) {
+              local_species_loaded = true;
+            }
+      }, 750)          
       })
 
-// async function publishLocation() {
-
-//         var formData = new FormData();
-
-//         formData.append('lng', lng);
-//         formData.append('lat', lat);
-//         formData.append('type', type);
-//         formData.append('lng_lat', JSON.stringify(center));
-
-
-//         console.log(formData);
-
-//         const response = await fetch('/publish_location', {
-//           method: 'post',
-//           body: formData
-//         })
-
-//         if (response.ok) {
-
-//           let response_json = await response.json();
-//           console.log(response_json);
-//           console.log(response_json[0].id);
-
-//           // let redirect = '/' + response_json[0].id;
-          
-//           // window.location = redirect;
-//         }
-//         else {
-//           let response_json = await response.json();
-//           console.log(response_json);
-//           console.log(response_json.status);
-//           console.log(response.body);
-//           // alert(await response.text())
-//         }
-
-// }
 
 function handleMapClick(e) {
 
@@ -320,6 +250,22 @@ function handleMessage(event) {
     {/if}
   </Map>
 
+  <div class="info_panel">
+    {#if local_species_loaded == true}
+    <p>Local Species:</p>
+    <ul style="text-align: left; margin-left: -15px;">
+      <li style="margin-bottom: 10px;">
+        <!-- <img loading="lazy" style="width: 30px; height: auto;" src="https://www.gardenia.net/storage/app/public/uploads/images/detail/xeOghGISr6OZa8xAJ0wyWVyxzjNvLAbT8e81uo9i.jpeg" />  -->
+        White clover (Trifolium repens)</li>
+      <li style="margin-bottom: 10px;">Yarrow (Achillea millefolium)</li>
+      <li>Nettle (Urtica dioica)</li>
+    </ul>
+    {/if}
+    {#if local_species_loaded == false}
+    <LoadingSpinner></LoadingSpinner>
+    {/if}
+  </div>
+
   {#if display_notification == true}
   <div class="notifications">
     <!-- <svg on:click={function() { display_notification = false; }} xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: 10%; right: 5%;" class="icon icon-tabler icon-tabler-x" width="14" height="14" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -371,7 +317,7 @@ function handleMessage(event) {
       <button>Submit</button>
     </form>
     {/if}
-    <button style="display: block;" on:click={function() {menu_display = "plant_with_peers"}}>Plant with a peer</button>
+    <button style="display: block;" on:click={function() {menu_display = "plant_with_peers"}}>Plant with peers</button>
     {#if menu_display == "plant_with_peer"}
     <form style="background: white;" on:submit|preventDefault={publishSite}>
       <label for="content">Below is a list of local natives.  Add any other information you wish to share with others.</label>
@@ -390,7 +336,7 @@ function handleMessage(event) {
     <hr>
     <button style="display: block;" on:click={function() {menu_display = "offers"}}>Have something to offer?</button>
     {:else}
-    <button style="display: block;" on:click={function() {menu_display = "seed_share"}}>Seeds / plants to share.</button>
+    <button style="display: block;" on:click={function() {menu_display = "seed_share"}}>Seeds + plants to share.</button>
     {#if menu_display == "seed_share"}
     <form style="background: white;" on:submit|preventDefault={publishSite}>
       <label for="content">List the seeds and plants you're willing to share, and anything else you'd like others to know.</label>
@@ -454,6 +400,25 @@ function handleMessage(event) {
     transform: translate(-50%, 50%);
     border-radius: 10px;
   }
+
+  .info_panel {
+    /* width: 40vw;
+    margin: auto; */
+    text-align: center;
+    width: 40vw;
+    color: white; 
+    position: absolute; 
+    top: 5%; 
+    /* background:#50BFE6;  */
+    /* background: rgba(124,80,230, 0.3);
+    border: solid 1px #7c50e6; */
+    background: rgba(193,230,80, 0.2);
+    border: solid 1px rgb(193 230 80);
+    right: 5%; 
+    /* transform: translate(-20%, 20%); */
+    border-radius: 10px;
+  }
+
 
   .myMarker {
   background-color: currentColor;
