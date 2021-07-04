@@ -7,10 +7,13 @@
       export let sites;
       let center = [-74.5, 40];
       let mapComponent;
-      let zoom = 10;
+      let zoom = 3;
       let type = "plant_natives_here";
       $: lng = center[0];
       $: lat = center[1];
+
+      let projectsArrayGeojson = [];
+
 
       onMount(async() => {
 
@@ -40,7 +43,7 @@
 
           center = [pos.lng, pos.lat];
 
-          mapComponent.setCenter([pos.lng, pos.lat], 15)
+          mapComponent.setCenter([pos.lng, pos.lat], 3)
 
           return pos
 
@@ -53,6 +56,49 @@
           })
           }
           console.log(sites);
+          
+          // for (var i=0; i < sites.length; i++) {
+
+          // let new_feature =   {
+          //                       "type": "Feature",
+          //                     "geometry": {
+          //                       "type": "Point",
+          //                       "coordinates": [
+          //                         sites[i].lng,
+          //                         sites[i].lat
+          //                       ]
+          //                     }
+          //                   }
+
+          // projectsArrayGeojson.push(new_feature);
+
+          // }
+          
+          // mapComponent.addSource('projects', {
+          //   'type': 'geojson',
+          //   'data': projectsArrayGeojson
+          //   });
+
+          // mapComponent.addLayer({
+          //   id: 'projectsLayer',
+          //   type: 'circle',
+          //   source: 'projects',
+          //   layout: {
+          //       // make layer visible by default
+          //       visibility: "visible",
+          //       },
+          //   paint: {
+          //   "circle-color": "blue",
+          //   "circle-radius": 30
+          //   // 'circle-radius':{
+          //   //         'base': 5,
+          //   //         'stops': [
+          //   //         [12, 2],
+          //   //         [22, 180]
+          //   //         ]
+          //   //       }          
+          //     }
+          //   });
       })
 
 async function publishLocation() {
@@ -140,6 +186,12 @@ async function publishLocation() {
       bind:zoom
     >
     <Marker bind:lat bind:lng />
+
+    {#if sites}
+    {#each sites as site}
+      <Marker lng={site.lng} lat={site.lat} />
+    {/each}
+    {/if}
   </Map>
     </div>
 
