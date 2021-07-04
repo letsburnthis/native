@@ -189,7 +189,7 @@ async function publishLocation() {
 
     {#if sites}
     {#each sites as site}
-      <Marker lng={site.lng} lat={site.lat} />
+      <Marker lng={site.lng} lat={site.lat} label={site.type} />
     {/each}
     {/if}
   </Map>
