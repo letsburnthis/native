@@ -144,6 +144,21 @@ async function publishLocation() {
 
 }
 
+function handleMapClick(e) {
+
+  console.log(e.detail);
+  setTimeout( function () {
+    let popups = document.getElementsByClassName('mapboxgl-popup beyonk-mapbox-popup mapboxgl-popup-anchor-bottom');
+    console.log(popups.length);
+
+    if (popups.length == 0) {
+      lng = e.detail.lng; 
+      lat = e.detail.lat; 
+  }
+  }, 50);
+
+}
+
 async function publishSite(e) {
 
 var formData = new FormData(e.target);
@@ -240,18 +255,19 @@ function handleMessage(event) {
     <Map
       accessToken="pk.eyJ1IjoibGV0b3VycG93ZXJzY29tYmluZSIsImEiOiJjazFmN3N0eTUwb3JwM2JwYWk4ZXB1enNtIn0._UjpOqZIeiWqhscosubipw"
       bind:this={mapComponent}
-      on:recentre={e => console.log(e.detail) }
+      on:recentre={e => { console.log(e.detail); } }
       {center}
+      on:click={handleMapClick}
       bind:zoom
       style={style}
-      on:message={handleMessage}
-      on:click={e => { console.log(e.detail); lng = e.detail.lng; lat = e.detail.lat; } }
     >
-    <Marker bind:lat bind:lng />
+    <!-- on:click={e => { console.log(e.detail); lng = e.detail.lng; lat = e.detail.lat; if (zoom < 10) { zoom = 17; }} } -->
+
+    <Marker bind:lat bind:lng color="blue" />
 
     {#if sites}
     {#each sites as site}
-      <Marker lng={site.lng} lat={site.lat} label={site.type} />
+      <Marker lng={site.lng} lat={site.lat} label={site.type} color="blue" />
     {/each}
     {/if}
   </Map>
