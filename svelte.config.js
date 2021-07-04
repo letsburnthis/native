@@ -9,7 +9,8 @@ const config = {
 		target: '#svelte',
 		vite: {
 			optimizeDeps: {
-			  include: ["fastq"]			
+			  include: ["fastq"],
+			  include: ["@supabase/supabase-js/src/index.ts"]		
 			}
 		  }
 	}
