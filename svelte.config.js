@@ -1,3 +1,4 @@
+import adapter from '@sveltejs/adapter-netlify';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -6,6 +7,7 @@ const config = {
 		target: '#svelte',
 		vite: {
 			optimizeDeps: {
+			  adapter: adapter(),
 			  include: ["fastq"]			
 			}
 		  }

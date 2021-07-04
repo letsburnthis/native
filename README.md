@@ -29,9 +29,22 @@ This can take place on public greens, city parks, sidewalks, trails, residential
 
 ## Use this tool locally
 
-First, clone this repository locally.
+First, clone this repository locally and install dependences with `npm install`.
 
-Once you've installed dependencies with `npm install` start a development server:
+You'll also need to set-up a [Supabase account](supabase.com), create an orgnization in Supabase, and create a table named `native-here` that includes (at least) these columns:
+
+* **lng** (type: text)
+* **lat** (type: text)
+* **lng_lat** (type: jsonb)
+* **type** (type: jsonb)
+* **content** (type: jsonb)
+* **title** (type: jsonb)
+
+Finally, Supabase URL and Supabase anon key in the `.env` file.
+
+This will initiate the application locally with a connection to the freshly created table.
+
+To start the development server:
 
 ```bash
 npm run dev

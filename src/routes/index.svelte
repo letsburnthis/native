@@ -28,7 +28,7 @@
       let opening_modal = true;
 
 
-      let local_species_loaded = false;
+      let local_species_loaded = true;
 
 
       onMount(async() => {
