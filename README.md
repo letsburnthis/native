@@ -19,7 +19,7 @@ More details: *The problem, Tallamy explained, is with the picky diets of plant-
 
 An outcome in which 70% of land biomass is flourishing with native species. Solutions are ways of facilitating they outcome. 
 
-This repository includes one possible solution — 🌱 **Native** 
+This repository includes one possible solution: 🌱 **Native** 
 
 Native is a tool that enables people to see nature flourishing on the land around them, learn the native plant species which generate that future, and signal for that location to be planted with those species -- to plant that future. 
 
