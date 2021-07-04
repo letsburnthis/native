@@ -12,9 +12,13 @@
       let natives_list = "Species: \r\n \r\n - White clover (Trifolium repens) \r\n - Yarrow (Achillea millefolium ) \r\n - Nettle (Urtica dioica)";
       $: lng = center[0];
       $: lat = center[1];
+      // $: style = 'mapbox://styles/mapbox/streets-v11'
       $: style = 'mapbox://styles/mapbox/satellite-v9'
       // $: style = 'mapbox://styles/mapbox/satellite-streets-v11'
       let menu_display = "plant";
+
+      let display_notification = false;
+      let notification_text = "You have local gardeners and seed shares nearby who can help.  Check the map to connect.";
 
 
       let projectsArrayGeojson = [];
@@ -166,24 +170,29 @@ async function publishSite(e) {
 
 var formData = new FormData(e.target);
 
-if (menu_display == "share_seeds_plants") {
-  title = "Seeds and plants here"
+if (menu_display == "seed_share") {
+  title = "Seeds and plants here";
+  notification_text = "You have plant sites and local gardeners nearby.  Check the map to connect."
 }
 
 else if (menu_display == "help") {
   title = "Willing to help others"
+  notification_text = "You have seed shares and plant sites nearby.  Check the map to connect.";
 }
 
 else if (menu_display == "plant_learn") {
-  title = "Learning to plant"
+  title = "Learning to plant";
+  notification_text = "You have seed shares and local gardeners nearby.  Check the map to connect.";
 }
 
 else if (menu_display == "plant_with_peers") {
-  title = "Planting with peers"
+  title = "Planting with peers";
+  notification_text = "You have seed shares and local gardeners nearby.  Check the map to connect.";
 }
 
 else if (menu_display == "plant_here") {
-  title = "Plant here!"
+  title = "Plant here!";
+  notification_text = "You have seed shares and local gardeners nearby.  Check the map to connect.";
 }
 
 formData.append('lng', lng);
@@ -207,7 +216,10 @@ if (response.ok) {
   console.log(response_json[0].id);
   sites.push(response_json[0]);
   sites = sites;
-  menu_display = "offers";
+  // menu_display = "plant";
+
+  display_notification = true;
+  menu_display = "plant";
 
   // let redirect = '/' + response_json[0].id;
   
@@ -261,8 +273,8 @@ function handleMessage(event) {
   
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<!-- <h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p> -->
 
 <!-- <button on:click={publishLocation}>Publish location</button> -->
 
@@ -308,6 +320,46 @@ function handleMessage(event) {
     {/if}
   </Map>
 
+  {#if display_notification == true}
+  <div class="notifications">
+    <!-- <svg on:click={function() { display_notification = false; }} xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: 10%; right: 5%;" class="icon icon-tabler icon-tabler-x" width="14" height="14" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg> -->
+    <!-- <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: 5%; right: 5%;" class="icon icon-tabler icon-tabler-x" width="28" height="28" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg> -->
+    <div class="update">
+    <p style="padding-left: 3px;">
+      <svg style="vertical-align: middle" xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-check" width="28" height="28" viewBox="0 0 24 24" stroke-width="1.5" stroke="#92de00" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M9 12l2 2l4 -4" />
+      </svg>
+      <span style="color: #92de00; font-size: 16px;">Posted!</span>
+    </p>
+    </div>
+    <div class="body">
+      <p style="padding: 0px 15px; font-size: 16px;">
+        {notification_text}
+      </p>
+      <button on:click={function() { display_notification = false; }} style="margin: auto; text-align: center; display: block; margin-bottom: 20px; background: #e6e150;">
+        <svg style="vertical-align: text-bottom" xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hand-rock" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#525252" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+          <path d="M11 11.5v-1a1.5 1.5 0 0 1 3 0v1.5" />
+          <path d="M17 12v-6.5a1.5 1.5 0 0 1 3 0v10.5a6 6 0 0 1 -6 6h-2h.208a6 6 0 0 1 -5.012 -2.7a69.74 69.74 0 0 1 -.196 -.3c-.312 -.479 -1.407 -2.388 -3.286 -5.728a1.5 1.5 0 0 1 .536 -2.022a1.867 1.867 0 0 1 2.28 .28l1.47 1.47" />
+          <path d="M14 10.5a1.5 1.5 0 0 1 3 0v1.5" />
+          <path d="M8 13v-8.5a1.5 1.5 0 0 1 3 0v7.5" />
+        </svg>
+        <span style="color: #525252; font-size: 16px; display: inline-block; padding: 5px;">Got it!</span>
+      </button>
+    </div>
+  </div>
+  {/if}
+
 
   <div class="interaction" style="position: absolute; bottom: 15%">
     {#if menu_display.substr(0,5) == "plant"}
@@ -338,8 +390,8 @@ function handleMessage(event) {
     <hr>
     <button style="display: block;" on:click={function() {menu_display = "offers"}}>Have something to offer?</button>
     {:else}
-    <button style="display: block;" on:click={function() {menu_display = "share_seeds_plants"}}>Seeds / plants to share.</button>
-    {#if menu_display == "share_seeds_plants"}
+    <button style="display: block;" on:click={function() {menu_display = "seed_share"}}>Seeds / plants to share.</button>
+    {#if menu_display == "seed_share"}
     <form style="background: white;" on:submit|preventDefault={publishSite}>
       <label for="content">List the seeds and plants you're willing to share, and anything else you'd like others to know.</label>
       <textarea name="content"></textarea>
@@ -369,7 +421,8 @@ function handleMessage(event) {
 
     .map-wrap {
 		width: 100%;
-    height: 80vh;
+    height: 100vh;
+    /* height: 80vh; */
 		/* height: 100vh; */
 	}
 
@@ -387,6 +440,19 @@ function handleMessage(event) {
   .interaction {
     left: 50%;
     transform: translate(-50%, 50%);
+  }
+
+  .notifications {
+    width: 80vw;
+    margin: auto;
+    color: white; 
+    position: absolute; 
+    top: 1%; 
+    /* background:#50BFE6;  */
+    background: #7c50e6;
+    left: 50%; 
+    transform: translate(-50%, 50%);
+    border-radius: 10px;
   }
 
   .myMarker {
