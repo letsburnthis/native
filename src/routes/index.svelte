@@ -13,6 +13,9 @@
       let natives_list = "Species: \r\n \r\n - White clover (Trifolium repens) \r\n - Yarrow (Achillea millefolium ) \r\n - Nettle (Urtica dioica)";
       $: lng = center[0];
       $: lat = center[1];
+
+      $: lng_display = center[0].toFixed(4);
+      $: lat_display = center[1].toFixed(4);
       // $: style = 'mapbox://styles/mapbox/streets-v11'
       $: style = 'mapbox://styles/mapbox/satellite-v9'
       // $: style = 'mapbox://styles/mapbox/satellite-streets-v11'
@@ -22,7 +25,8 @@
       let notification_text = "You have local gardeners and seed shares nearby who can help.  Check the map to connect.";
 
 
-      let projectsArrayGeojson = [];
+      let opening_modal = true;
+
 
       let local_species_loaded = false;
 
@@ -208,6 +212,17 @@ function handleMessage(event) {
 
 <!-- <button on:click={publishLocation}>Publish location</button> -->
 
+{#if opening_modal == true}
+<div class="opening_modal">
+  <!-- <p>Welcome to</p> -->
+  <div class="modal-content" style="position: absolute; top: 20%; text-align: center; padding: 20px;">
+  <h1 style="margin-left: -20px;">🌱 Native</h1>
+  <p style="font-size: 20px;">Walk to an outdoor place and share your location.</p>
+  <button style="font-size: 18px; background: #d2f7a1;" on:click={function() {opening_modal = false;}}>🌿 I'm outside 🌿</button>
+  </div>
+</div>
+{/if}
+
 <div class="section-txt" id="map">
     <div class="map-wrap">
     <Map
@@ -252,7 +267,8 @@ function handleMessage(event) {
 
   <div class="info_panel">
     {#if local_species_loaded == true}
-    <p>Local Species:</p>
+    <p style="margin-bottom: 5px;">[{lng.toFixed(4)}, {lat.toFixed(4)}]</p>
+    <p style="margin-top: 10px;">Local Species:</p>
     <ul style="text-align: left; margin-left: -15px;">
       <li style="margin-bottom: 10px;">
         <!-- <img loading="lazy" style="width: 30px; height: auto;" src="https://www.gardenia.net/storage/app/public/uploads/images/detail/xeOghGISr6OZa8xAJ0wyWVyxzjNvLAbT8e81uo9i.jpeg" />  -->
@@ -440,5 +456,14 @@ function handleMessage(event) {
   border-width: 0px;
   opacity:1;
   z-index: 995;
+}
+
+.opening_modal {
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  background: black;
+  z-index: 100;
+  color: white;
 }
 </style>
