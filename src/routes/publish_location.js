@@ -19,6 +19,7 @@ export async function post(request) {
       lat: request.body.get('lat'),
       lng_lat: request.body.get('lng_lat'),
       type: request.body.get('type'),
+      content: request.body.get('content')
     //   geojson_feature: geojson_feature,
     //   geo_id: request.body.get('geo_id'),
     //   geo_index: 'osm',
