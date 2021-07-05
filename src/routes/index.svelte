@@ -1,6 +1,6 @@
 <script>
-      import { Map, Geocoder, controls } from '@beyonk/svelte-mapbox';
-      import Marker from '$lib/Marker.svelte';
+      import { Map, Geocoder, Marker, controls } from '$lib/svelte-mapbox';
+      // import Marker from '$lib/Marker.svelte';
       const { GeolocateControl, NavigationControl, ScaleControl } = controls;
       import {afterUpdate, getContext, onMount, setContext} from 'svelte';
       import LoadingSpinner from '$lib/LoadingSpinner.svelte';

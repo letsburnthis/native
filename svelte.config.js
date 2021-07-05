@@ -1,4 +1,3 @@
-// import preprocess from "svelte-preprocess";
 import adapter from '@sveltejs/adapter-netlify';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -9,8 +8,7 @@ const config = {
 		target: '#svelte',
 		vite: {
 			optimizeDeps: {
-			  include: ["fastq"],
-			  include: ["@supabase/supabase-js/src/index.ts"]		
+			  include: ["fastq"]
 			}
 		  }
 	}
