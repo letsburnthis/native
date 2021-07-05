@@ -4,6 +4,7 @@
       const { GeolocateControl, NavigationControl, ScaleControl } = controls;
       import {afterUpdate, getContext, onMount, setContext} from 'svelte';
       import LoadingSpinner from '$lib/LoadingSpinner.svelte';
+      import wc from 'which-country';
 
 
       export let sites;
@@ -12,7 +13,8 @@
       let mapComponent;
       let zoom = 3;
       let type = "plant_natives_here";
-      let natives_list = "Species: \r\n \r\n - White clover (Trifolium repens) \r\n - Yarrow (Achillea millefolium ) \r\n - Nettle (Urtica dioica)";
+      let country;
+      let natives_list = "Species: \r\n \r\n - White clover (Trifolium repens) \r\n - Yarrow (Achillea millefolium) \r\n - Nettle (Urtica dioica)";
       $: lng = center[0];
       $: lat = center[1];
 
@@ -61,6 +63,8 @@
 
           center = [pos.lng, pos.lat];
 
+          country = wc([center[0], center[1]]);
+
           mapComponent.setCenter([pos.lng, pos.lat], 17)
 
           zoom = 17;
@@ -81,14 +85,33 @@
             if (zoom > 10) {
               local_species_loaded = true;
             }
-      }, 750)          
+      }, 750) 
+      
+      country = wc([center[0], center[1]]);
+
       })
 
 
 function handleMapClick(e) {
 
   console.log(e.detail);
-  
+
+  console.log('logging country');
+  console.log(wc([e.detail.lng, e.detail.lat]));
+  country = wc([e.detail.lng, e.detail.lat]);
+
+  if (country == "NLD") {
+    natives_list = "Species: \r\n \r\n - Clubmoss and quilwort (Huperzia selago, Lycopodiella inundata) \r\n - Ferns and horsetails (Ophioglossum vulgatum, Botrychium lunaria) \r\n - Aroid (Arum maculatum)";
+  }
+
+  else if (country == "DEU") {
+    natives_list = "Species: \r\n \r\n - Cornflower (Centaurea cyanus) \r\n - European spindle (Euonymus europaeus) \r\n - German chamomile (Matricaria recutita) \r\n - Common bugloss (Anchusa officinalis)";
+  }
+
+  else {
+    natives_list = "Species: \r\n \r\n - White clover (Trifolium repens) \r\n - Yarrow (Achillea millefolium) \r\n - Nettle (Urtica dioica)";
+  }
+
   display_my_location = true;
 
   setTimeout( function () {
@@ -276,14 +299,28 @@ function handleMessage(event) {
 
   <div class="info_panel">
     {#if local_species_loaded == true}
-    <p style="margin-bottom: 5px;">[{lng.toFixed(4)}, {lat.toFixed(4)}]</p>
+    {#if country == "NLD" || "DEU"}
+    <p style="margin-bottom: 5px;">{country}</p>
+    {/if}
+    <p style="margin-bottom: 5px; margin-top: 5px;">[{lng.toFixed(4)}, {lat.toFixed(4)}]</p>
     <p style="margin-top: 10px;">Local Species:</p>
     <ul style="text-align: left; margin-left: -15px;">
-      <li style="margin-bottom: 10px;">
-        <!-- <img loading="lazy" style="width: 30px; height: auto;" src="https://www.gardenia.net/storage/app/public/uploads/images/detail/xeOghGISr6OZa8xAJ0wyWVyxzjNvLAbT8e81uo9i.jpeg" />  -->
-        White clover (Trifolium repens)</li>
+      {#if country == "NLD"}
+      <li style="margin-bottom: 10px;">Clubmoss and quilwort (Huperzia selago, Lycopodiella inundata)</li>
+      <li style="margin-bottom: 10px;">Ferns and horsetails (Ophioglossum vulgatum, Botrychium lunaria)</li>
+      <li>Aroid (Arum maculatum)</li>
+      <p>See more: <a href="https://pbase.com/rogiervanvugt/flora_of_the_netherlands" target="_blank">550 native species in NL</a>, <a href="https://www.froweinexport.com/native-trees/" target="_blank">Dutch native trees</a>, <a href="https://www.perennialmeadows.com/2013/05/native-plant-gardens-in-the-netherlands-known-as-heemparken/" target="_blank">Heemparken (native plant gardens)</a></p>
+      {:else if country == "DEU"}
+      <li style="margin-bottom: 10px;">Cornflower (Centaurea cyanus)</li>
+      <li style="margin-bottom: 10px;">European spindle (Euonymus europaeus)</li>
+      <li style="margin-bottom: 10px;">German chamomile (Matricaria recutita)</li>
+      <li style="margin-bottom: 10px;">Common bugloss (Anchusa officinalis)</li>
+      <!-- <p>See more: <a href="https://pbase.com/rogiervanvugt/flora_of_the_netherlands" target="_blank">550 native species in NL</a>, <a href="https://www.froweinexport.com/native-trees/" target="_blank">Dutch native trees</a>, <a href="https://www.perennialmeadows.com/2013/05/native-plant-gardens-in-the-netherlands-known-as-heemparken/" target="_blank">Heemparken (native plant gardens)</a></p>   -->
+      {:else}
+      <li style="margin-bottom: 10px;">White clover (Trifolium repens)</li>
       <li style="margin-bottom: 10px;">Yarrow (Achillea millefolium)</li>
       <li>Nettle (Urtica dioica)</li>
+      {/if}
     </ul>
     {/if}
     {#if local_species_loaded == false}
@@ -442,6 +479,12 @@ function handleMessage(event) {
     right: 5%; 
     /* transform: translate(-20%, 20%); */
     border-radius: 10px;
+    height: 40vh;
+    overflow: scroll;
+  }
+
+  .info_panel a {
+    color: #77fff0;
   }
 
 
