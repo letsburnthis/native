@@ -7,6 +7,7 @@
 
 
       export let sites;
+      let display_my_location = true;
       let center = [-74.5, 40];
       let mapComponent;
       let zoom = 3;
@@ -87,6 +88,9 @@
 function handleMapClick(e) {
 
   console.log(e.detail);
+  
+  display_my_location = true;
+
   setTimeout( function () {
     let popups = document.getElementsByClassName('mapboxgl-popup beyonk-mapbox-popup mapboxgl-popup-anchor-bottom');
     console.log(popups.length);
@@ -149,6 +153,9 @@ if (response.ok) {
   let response_json = await response.json();
   console.log(response_json);
   console.log(response_json[0].id);
+
+  display_my_location = false;
+
   sites.push(response_json[0]);
   sites = sites;
   // menu_display = "plant";
@@ -237,11 +244,12 @@ function handleMessage(event) {
     >
     <!-- on:click={e => { console.log(e.detail); lng = e.detail.lng; lat = e.detail.lat; if (zoom < 10) { zoom = 17; }} } -->
 
+    {#if display_my_location == true}
     <Marker bind:lat bind:lng color="skyblue">
       <!-- <div style="font-size: 18px">
-        📍
       </div> -->
     </Marker>
+    {/if}
 
     {#if sites}
     {#each sites as site}
