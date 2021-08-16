@@ -29,9 +29,9 @@ This can take place on public greens, city parks, sidewalks, trails, residential
 
 ## Use this tool locally
 
-First, clone this repository locally and install dependences with `npm install`.
+First, clone this repository locally and then cd into the newly created folder and install dependences with `npm install`.
 
-You'll also need to set-up a [Supabase account](supabase.com), create an orgnization in Supabase, and create a table named `native-here` that includes (at least) these columns:
+You'll also need to set-up a [Supabase account](supabase.com), create an organization in Supabase, and create a table named `native-here` that includes (at least) these columns:
 
 * **lng** (type: text)
 * **lat** (type: text)
